@@ -1,5 +1,6 @@
+import { AuthContext, useAuthController } from '@/context/auth'
 import type { LinksFunction } from '@remix-run/cloudflare'
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react'
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react'
 
 import './tailwind.css'
 
@@ -35,5 +36,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />
+  const auth = useAuthController()
+
+  return (
+    <AuthContext.Provider value={auth}>
+      <Outlet />
+    </AuthContext.Provider>
+  )
 }

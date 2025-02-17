@@ -7,11 +7,18 @@
     "build": "remix vite:build",
     "deploy": "pnpm run build && wrangler pages deploy",
     "dev": "remix vite:dev",
+    "types:cf": "wrangler types ./env.d.ts --env-interface CloudflareBindings",
     "lint": "biome lint .",
     "check": "biome check --write .",
     "start": "wrangler pages dev ./build/client",
     "typecheck": "tsc",
     "preview": "pnpm run build && wrangler pages dev"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*": "biome check --write ."
   },
   "dependencies": {
     "@remix-run/cloudflare": "^2.15.3",
@@ -19,7 +26,8 @@
     "@remix-run/react": "^2.15.3",
     "isbot": "^5.1.22",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
@@ -29,6 +37,8 @@
     "@tailwindcss/vite": "^4.0.6",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
+    "lint-staged": "^15.4.3",
+    "simple-git-hooks": "^2.11.1",
     "tailwindcss": "^4.0.6",
     "typescript": "^5.7.3",
     "vite": "^5.1.0",
