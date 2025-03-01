@@ -10,9 +10,7 @@
     "types:cf": "wrangler types ./env.d.ts --env-interface CloudflareBindings",
     "lint": "biome lint .",
     "check": "biome check --write .",
-    "start": "wrangler pages dev ./build/client",
-    "typecheck": "tsc",
-    "preview": "pnpm run build && wrangler pages dev"
+    "typecheck": "tsc"
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged"

@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/constants/env'
 import type { MetaFunction } from '@remix-run/cloudflare'
 
 export const meta: MetaFunction = () => {
@@ -21,6 +22,13 @@ export default function Index() {
                 A brief description of your application and its main value proposition. Make it
                 compelling and clear.
               </p>
+
+              {/* API URL Display */}
+              <div className="mt-8 inline-block px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-md">
+                <p className="text-sm font-mono text-gray-700 dark:text-gray-300">
+                  API: {API_BASE_URL}
+                </p>
+              </div>
             </div>
           </div>
         </div>
