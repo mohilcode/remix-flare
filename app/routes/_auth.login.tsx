@@ -20,6 +20,7 @@ import { Spinner } from '@/components/ui/spinner'
 import { authClient } from '@/lib/auth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate, useSearchParams } from '@remix-run/react'
+import { EyeIcon, EyeOffIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -37,6 +38,7 @@ export default function Login() {
   const [error, setError] = useState<string>()
   const [successMessage, setSuccessMessage] = useState<string>()
   const [isLoading, setIsLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -152,7 +154,21 @@ export default function Login() {
                     </Link>
                   </div>
                   <FormControl>
-                    <Input type="password" {...field} />
+                    <div className="relative">
+                      <Input type={showPassword ? 'text' : 'password'} {...field} />
+                      <button
+                        type="button"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                        onClick={() => setShowPassword(!showPassword)}
+                        tabIndex={-1}
+                      >
+                        {showPassword ? (
+                          <EyeOffIcon className="h-4 w-4" />
+                        ) : (
+                          <EyeIcon className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -10,7 +10,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -22,6 +21,7 @@ import { PASSWORD_REGEX, PASSWORD_REQUIREMENTS } from '@/constants/routes'
 import { authClient } from '@/lib/auth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate, useSearchParams } from '@remix-run/react'
+import { EyeIcon, EyeOffIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -45,6 +45,8 @@ export default function ResetPasswordPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | undefined>()
   const [tokenError, setTokenError] = useState<string | undefined>()
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const token = searchParams.get('token')
 
   useEffect(() => {
@@ -126,7 +128,25 @@ export default function ResetPasswordPage() {
                       <FormItem>
                         <FormLabel htmlFor="new-password">New Password</FormLabel>
                         <FormControl>
-                          <Input id="new-password" type="password" {...field} />
+                          <div className="relative">
+                            <Input
+                              id="new-password"
+                              type={showNewPassword ? 'text' : 'password'}
+                              {...field}
+                            />
+                            <button
+                              type="button"
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                              onClick={() => setShowNewPassword(!showNewPassword)}
+                              tabIndex={-1}
+                            >
+                              {showNewPassword ? (
+                                <EyeOffIcon className="h-4 w-4" />
+                              ) : (
+                                <EyeIcon className="h-4 w-4" />
+                              )}
+                            </button>
+                          </div>
                         </FormControl>
                         <FormMessage />
                         {!fieldState.invalid && (
@@ -145,7 +165,25 @@ export default function ResetPasswordPage() {
                       <FormItem>
                         <FormLabel htmlFor="confirm-password">Confirm New Password</FormLabel>
                         <FormControl>
-                          <Input id="confirm-password" type="password" {...field} />
+                          <div className="relative">
+                            <Input
+                              id="confirm-password"
+                              type={showConfirmPassword ? 'text' : 'password'}
+                              {...field}
+                            />
+                            <button
+                              type="button"
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                              tabIndex={-1}
+                            >
+                              {showConfirmPassword ? (
+                                <EyeOffIcon className="h-4 w-4" />
+                              ) : (
+                                <EyeIcon className="h-4 w-4" />
+                              )}
+                            </button>
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
