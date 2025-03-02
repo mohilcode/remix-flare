@@ -1,38 +1,62 @@
-import { API_BASE_URL } from '@/constants/env'
+import Features from '@/components/features'
+import Footer from '@/components/footer'
+import Header from '@/components/header'
+import { Button } from '@/components/ui/button'
+import { useRedirectIfAuthenticated } from '@/lib/auth'
 import type { MetaFunction } from '@remix-run/cloudflare'
+import { Link } from '@remix-run/react'
 
 export const meta: MetaFunction = () => {
   return [
-    { title: 'Welcome to Your App' },
-    { name: 'description', content: 'Your app description' },
+    { title: 'Welcome to Our Platform' },
+    { name: 'description', content: 'The simplest solution for your complex problems.' },
   ]
 }
 
 export default function Index() {
-  return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
-      <main className="pt-16">
-        <div className="relative isolate px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl py-32 sm:py-48 lg:py-56">
-            <div className="text-center">
-              <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl">
-                Your App Tagline Goes Here
-              </h1>
-              <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
-                A brief description of your application and its main value proposition. Make it
-                compelling and clear.
-              </p>
+  const isChecking = useRedirectIfAuthenticated('/dashboard')
 
-              {/* API URL Display */}
-              <div className="mt-8 inline-block px-4 py-2 bg-gray-100 dark:bg-gray-800 rounded-md">
-                <p className="text-sm font-mono text-gray-700 dark:text-gray-300">
-                  API: {API_BASE_URL}
+  if (isChecking) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-background">
+        <div
+          className="w-10 h-10 border-4 border-t-primary rounded-full animate-spin"
+          aria-label="Loading"
+          role="status"
+        />
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex min-h-screen flex-col bg-background">
+      <Header />
+      <main className="flex-1">
+        <section className="w-full py-12 md:py-24 lg:py-32">
+          <div className="container mx-auto max-w-7xl px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
+                  Welcome to Our Platform
+                </h1>
+                <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  The simplest solution for your complex problems.
                 </p>
+              </div>
+              <div className="flex flex-wrap justify-center gap-4 pt-4">
+                <Button asChild size="lg">
+                  <Link to="/signup">Get Started</Link>
+                </Button>
+                <Button variant="outline" asChild size="lg">
+                  <Link to="/learn-more">Learn More</Link>
+                </Button>
               </div>
             </div>
           </div>
-        </div>
+        </section>
+        <Features />
       </main>
+      <Footer />
     </div>
   )
 }

@@ -2,4 +2,5 @@
 
 interface CloudflareBindings {
 	NODE_ENV: string;
+	THEME_COOKIE_SECRET: string;
 }

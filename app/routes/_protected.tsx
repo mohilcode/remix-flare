@@ -1,10 +1,14 @@
 import { UserProfile } from '@/components/UserProfile'
 import { authClient } from '@/lib/auth'
+import type { LoaderFunction } from '@remix-run/cloudflare'
 import { Outlet, useNavigate } from '@remix-run/react'
 import { useEffect, useState } from 'react'
 
-export async function loader() {
-  return {}
+export const loader: LoaderFunction = async ({ request }) => {
+  return {
+    timestamp: Date.now(),
+    url: request.url,
+  }
 }
 
 export default function ProtectedLayout() {
