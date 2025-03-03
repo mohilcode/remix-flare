@@ -1,6 +1,15 @@
 import { cn } from '@/lib/utils'
 import type { LinksFunction, LoaderFunctionArgs } from '@remix-run/cloudflare'
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react'
+import {
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  isRouteErrorResponse,
+  useLoaderData,
+  useRouteError,
+} from '@remix-run/react'
 import { PreventFlashOnWrongTheme, ThemeProvider, useTheme } from 'remix-themes'
 import { createThemeSessionResolverWithSecret } from './sessions.server'
 
@@ -62,6 +71,49 @@ export function App() {
       </head>
       <body>
         <Outlet />
+        <ScrollRestoration />
+        <Scripts />
+      </body>
+    </html>
+  )
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError()
+  const [theme] = useTheme()
+
+  return (
+    <html lang="en" className={cn(theme)}>
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <div className="flex flex-col items-center justify-center min-h-screen p-4">
+          {isRouteErrorResponse(error) ? (
+            <>
+              <h1 className="text-4xl font-bold mb-4">
+                {error.status} {error.statusText}
+              </h1>
+              <p className="text-lg mb-8">
+                {error.data ||
+                  "The page you're looking for doesn't exist or is still under development."}
+              </p>
+            </>
+          ) : error instanceof Error ? (
+            <>
+              <h1 className="text-4xl font-bold mb-4">Error</h1>
+              <p className="text-lg mb-8">{error.message}</p>
+            </>
+          ) : (
+            <h1 className="text-4xl font-bold mb-4">Unknown Error</h1>
+          )}
+          <a href="/" className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Go Home
+          </a>
+        </div>
         <ScrollRestoration />
         <Scripts />
       </body>

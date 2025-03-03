@@ -1,41 +1,9 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { authClient } from '@/lib/auth'
-import type { Session, User } from '@/lib/types'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useSession } from '@/contexts/session-context'
 import { ArrowUpRight, DollarSign, LineChart, ShoppingCart, Users } from 'lucide-react'
-import { useEffect, useState } from 'react'
 
 export default function Dashboard() {
-  const [user, setUser] = useState<User | null>(null)
-  const [session, setSession] = useState<Session | null>(null)
-
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    const fetchSessionData = async () => {
-      try {
-        const { data: session } = await authClient.getSession()
-        if (session?.user) {
-          setUser(session.user)
-        }
-        if (session?.session) {
-          setSession(session.session)
-        }
-      } catch (error) {
-        console.error('Error fetching session data:', error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchSessionData()
-  }, [])
+  const { user, isLoading } = useSession()
 
   if (isLoading) {
     return (
@@ -55,7 +23,6 @@ export default function Dashboard() {
     )
   }
 
-  // Mock data for the dashboard cards
   const stats = [
     {
       title: 'Total Revenue',
@@ -89,13 +56,11 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col space-y-6">
-      {/* Welcome Section */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Welcome back, {user?.name || 'User'}!</h1>
         <p className="text-muted-foreground">Here's what's happening with your account today.</p>
       </div>
 
-      {/* Stats Section */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map(stat => (
           <Card key={stat.title} className="w-full">
@@ -118,7 +83,6 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {/* User Information */}
       <Card>
         <CardHeader>
           <CardTitle>Account Information</CardTitle>
@@ -146,9 +110,6 @@ export default function Dashboard() {
             </div>
           </div>
         </CardContent>
-        <CardFooter>
-          <p className="text-sm text-muted-foreground">Session ID: {session?.id || 'Unknown'}</p>
-        </CardFooter>
       </Card>
     </div>
   )

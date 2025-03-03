@@ -1,8 +1,8 @@
 import { DashboardSidebar } from '@/components/dashboard-sidebar'
-import { authClient } from '@/lib/auth'
+import { SessionProvider, useSession } from '@/contexts/session-context'
 import type { LoaderFunction } from '@remix-run/cloudflare'
 import { Outlet, useNavigate } from '@remix-run/react'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 export const loader: LoaderFunction = async ({ request }) => {
   return {
@@ -11,29 +11,21 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 }
 
-export default function ProtectedLayout() {
+function ProtectedLayoutContent() {
   const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(true)
+  const { isLoading, user, error } = useSession()
 
   useEffect(() => {
-    const checkSession = async () => {
-      try {
-        setIsLoading(true)
-        const { data: session } = await authClient.getSession()
-
-        if (!session) {
-          navigate('/login')
-        }
-      } catch (error) {
-        console.error('Session check failed:', error)
-        navigate('/login')
-      } finally {
-        setIsLoading(false)
-      }
+    if (!isLoading && !user) {
+      navigate('/login')
     }
+  }, [isLoading, user, navigate])
 
-    checkSession()
-  }, [navigate])
+  if (error) {
+    console.error('Session check failed:', error)
+    navigate('/login')
+    return null
+  }
 
   if (isLoading) {
     return (
@@ -57,5 +49,13 @@ export default function ProtectedLayout() {
         </main>
       </div>
     </div>
+  )
+}
+
+export default function ProtectedLayout() {
+  return (
+    <SessionProvider>
+      <ProtectedLayoutContent />
+    </SessionProvider>
   )
 }

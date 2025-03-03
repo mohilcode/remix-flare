@@ -1,25 +1,14 @@
 import { ModeToggle } from '@/components/mode-toggle'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
+import { useSession } from '@/contexts/session-context'
 import { authClient } from '@/lib/auth'
-import type { User as UserType } from '@/lib/types'
-import { NavLink } from '@remix-run/react'
+import { NavLink, useNavigate } from '@remix-run/react'
 import { Home, LogOut, Settings, User } from 'lucide-react'
-import { useEffect, useState } from 'react'
 
 export function DashboardSidebar() {
-  const [user, setUser] = useState<UserType | null>(null)
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const { data: session } = await authClient.getSession()
-      if (session?.user) {
-        setUser(session.user)
-      }
-    }
-
-    fetchUserData()
-  }, [])
+  const { user, isLoading } = useSession()
+  const navigate = useNavigate()
 
   const initials = user?.name
     ? user.name
@@ -32,7 +21,9 @@ export function DashboardSidebar() {
   return (
     <div className="h-full w-64 border-r bg-sidebar flex flex-col">
       <div className="flex flex-col items-center space-y-2 p-4 border-b">
-        {user ? (
+        {isLoading ? (
+          <div className="h-16 w-16 animate-pulse rounded-full bg-muted" />
+        ) : user ? (
           <div className="flex flex-col items-center space-y-2 w-full">
             <Avatar className="h-16 w-16">
               <AvatarImage src={user.image || undefined} alt={user.name || ''} />
@@ -90,7 +81,10 @@ export function DashboardSidebar() {
           <Button
             variant="outline"
             className="w-full justify-start"
-            onClick={() => authClient.signOut()}
+            onClick={async () => {
+              await authClient.signOut()
+              navigate('/login')
+            }}
           >
             <LogOut className="mr-2 h-4 w-4" />
             <span>Sign out</span>
