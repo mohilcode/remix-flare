@@ -11,7 +11,7 @@ import {
   useRouteError,
 } from '@remix-run/react'
 import { PreventFlashOnWrongTheme, ThemeProvider, useTheme } from 'remix-themes'
-import { createThemeSessionResolverWithSecret } from './sessions.server'
+import { createThemeSessionResolverWithSecret } from './lib/utils'
 
 import styles from './tailwind.css?url'
 
