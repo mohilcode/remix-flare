@@ -11,7 +11,7 @@ import {
   useRouteError,
 } from '@remix-run/react'
 import { PreventFlashOnWrongTheme, ThemeProvider, useTheme } from 'remix-themes'
-import { createThemeSessionResolverWithSecret } from './lib/utils'
+import { createThemeSessionResolverWithSecret, getThemeSecret } from './lib/theme-utils.server'
 
 import styles from './tailwind.css?url'
 
@@ -30,9 +30,7 @@ export const links: LinksFunction = () => [
 ]
 
 export async function loader({ request, context }: LoaderFunctionArgs) {
-  const { env } = context.cloudflare
-
-  const secret = env.THEME_COOKIE_SECRET || 's3cr3t1'
+  const secret = getThemeSecret(context.cloudflare.env)
 
   const resolver = createThemeSessionResolverWithSecret(secret)
 
