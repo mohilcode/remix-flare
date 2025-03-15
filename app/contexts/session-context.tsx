@@ -1,4 +1,5 @@
 import { authClient } from '@/lib/auth'
+import { logError } from '@/lib/error-utils'
 import type { User } from '@/lib/types'
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 
@@ -27,7 +28,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
         setUser(null)
       }
     } catch (err) {
-      console.error('Error fetching session data:', err)
+      logError(err, 'auth:session-fetch')
       setError(err instanceof Error ? err : new Error('Failed to fetch session'))
     } finally {
       setIsLoading(false)

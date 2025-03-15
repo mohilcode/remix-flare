@@ -11,6 +11,7 @@ import {
   useRouteError,
 } from '@remix-run/react'
 import { PreventFlashOnWrongTheme, ThemeProvider, useTheme } from 'remix-themes'
+import { logError } from './lib/error-utils'
 import { createThemeSessionResolverWithSecret, getThemeSecret } from './lib/theme-utils.server'
 
 import styles from './tailwind.css?url'
@@ -79,6 +80,8 @@ export function App() {
 export function ErrorBoundary() {
   const error = useRouteError()
   const [theme] = useTheme()
+
+  logError(error, 'root-error-boundary')
 
   return (
     <html lang="en" className={cn(theme)}>

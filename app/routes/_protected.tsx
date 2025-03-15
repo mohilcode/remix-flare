@@ -1,5 +1,6 @@
 import { DashboardSidebar } from '@/components/dashboard-sidebar'
 import { SessionProvider, useSession } from '@/contexts/session-context'
+import { logError } from '@/lib/error-utils'
 import type { LoaderFunction } from '@remix-run/cloudflare'
 import { Outlet, useNavigate } from '@remix-run/react'
 import { useEffect } from 'react'
@@ -22,7 +23,7 @@ function ProtectedLayoutContent() {
   }, [isLoading, user, navigate])
 
   if (error) {
-    console.error('Session check failed:', error)
+    logError(error, 'auth:session-check')
     navigate('/login')
     return null
   }

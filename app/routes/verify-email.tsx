@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { authClient } from '@/lib/auth'
+import { handleServerError } from '@/lib/error-utils'
 import type { LoaderFunction } from '@remix-run/cloudflare'
 import { useLoaderData } from '@remix-run/react'
 import { Link } from '@remix-run/react'
@@ -38,11 +39,11 @@ export const loader: LoaderFunction = async ({ request }): Promise<Response> => 
       status: 'success',
     })
   } catch (error) {
-    console.error('Email verification error:', error)
-    return Response.json({
-      status: 'error',
-      message: 'An unexpected error occurred during email verification.',
-    })
+    return handleServerError(
+      error,
+      'auth:email-verification',
+      'An unexpected error occurred during email verification.'
+    )
   }
 }
 
