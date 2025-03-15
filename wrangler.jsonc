@@ -6,6 +6,9 @@
   "observability": {
     "enabled": true
   },
+  "placement": {
+    "mode": "smart"
+  },
   "vars": {
     "NODE_ENV": "production",
     "THEME_COOKIE_SECRET": "7c8df2e619a45b38cf1fa9e2b631784fd92c01a8e659b6"
